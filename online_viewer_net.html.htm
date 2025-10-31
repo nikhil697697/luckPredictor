@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily & Weekly Fortune Predictor</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #1a1a1a, #0a0a0a);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ffb347;
+      font-size: 2.3rem;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin: 5px;
+      font-size: 1rem;
+      width: 220px;
+      text-align: center;
+    }
+    button {
+      background: #ff4b2b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 10px;
+    }
+    button:hover {
+      background: #ff6a3d;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      width: 320px;
+      margin-top: 15px;
+    }
+    .result {
+      font-size: 1.05rem;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔮 Daily & Weekly Fortune 🔮</h1>
+  <input type="text" id="nameInput" placeholder="Enter your name..." /><br>
+  <input type="date" id="dobInput" placeholder="Enter your DOB (optional)" /><br>
+  <button onclick="generateFortune()">Show My Fortune</button>
+
+  <div id="output" class="card" style="display:none;">
+    <div class="result" id="color"></div>
+    <div class="result" id="number"></div>
+    <div class="result" id="item"></div>
+    <div class="result" id="mood"></div>
+    <div class="result" id="today"></div>
+    <div class="result" id="week"></div>
+  </div>
+
+  <script>
+    function seededRandom(seed) {
+      let x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    }
+
+    function generateFortune() {
+      const name = document.getElementById("nameInput").value.trim().toLowerCase();
+      const dob = document.getElementById("dobInput").value;
+      if (!name) {
+        alert("Please enter your name!");
+        return;
+      }
+
+      // Get current day to vary results daily
+      const todayDate = new Date();
+      const daySeed = todayDate.getFullYear() * 1000 + (todayDate.getMonth() + 1) * 50 + todayDate.getDate();
+
+      // Create a stable numeric seed from name + day (+ dob if exists)
+      let seed = 0;
+      for (let i = 0; i < name.length; i++) seed += name.charCodeAt(i) * (i + 1);
+      if (dob) {
+        for (let i = 0; i < dob.length; i++) seed += dob.charCodeAt(i) * (i + 1);
+      }
+      seed += daySeed;
+
+      // Data sets
+      const colors = ["Red", "Blue", "Green", "Purple", "Orange", "Yellow", "Pink", "Black", "White", "Turquoise"];
+      const items = ["Ring", "Phone", "Wallet", "Keychain", "Watch", "Pen", "Shoes", "Bracelet", "Hat", "Notebook"];
+      const moods = ["Amazing 🌟", "Lucky 🍀", "Romantic 💞", "Adventurous 🧭", "Calm 🌿", "Energetic ⚡", "Creative 🎨", "Chill 😎", "Productive 💼", "Relaxed ☕"];
+      const todayTips = [
+        "Take it slow — patience will pay off.",
+        "Focus on one task; multitasking might mess your flow.",
+        "A little kindness today will bring you luck.",
+        "Don’t rush decisions — clarity will come naturally.",
+        "Something unexpected might make you smile today.",
+        "Stay confident — people notice your energy.",
+        "Avoid negativity; protect your peace.",
+        "Revisit an old idea — it could be valuable.",
+        "Take a walk or short break — mind refreshes help.",
+        "Say yes to something new today!"
+      ];
+      const weekGoals = [
+        "This week favors planning and small wins.",
+        "Work on relationships — personal or professional.",
+        "Trust your instincts over others’ opinions.",
+        "Balance your rest and ambition.",
+        "Money flow improves by midweek — stay patient.",
+        "Let creativity lead you this week.",
+        "Be open to advice — collaboration helps.",
+        "Focus on your physical and mental health.",
+        "A surprise opportunity is coming your way.",
+        "End the week doing what truly makes you happy."
+      ];
+
+      // Pick consistent values
+      const color = colors[Math.floor(seededRandom(seed) * colors.length)];
+      const number = Math.floor(seededRandom(seed + 10) * 99) + 1;
+      const item = items[Math.floor(seededRandom(seed + 20) * items.length)];
+      const mood = moods[Math.floor(seededRandom(seed + 30) * moods.length)];
+      const todayMsg = todayTips[Math.floor(seededRandom(seed + 40) * todayTips.length)];
+      const weekMsg = weekGoals[Math.floor(seededRandom(seed + 50) * weekGoals.length)];
+
+      document.getElementById("output").style.display = "block";
+      document.getElementById("color").textContent = `🎨 Your color for today: ${color}`;
+      document.getElementById("number").textContent = `🔢 Your number for today: ${number}`;
+      document.getElementById("item").textContent = `💎 Lucky item: ${item}`;
+      document.getElementById("mood").textContent = `🌞 Your mood: ${mood}`;
+      document.getElementById("today").textContent = `🗓️ Today’s Advice: ${todayMsg}`;
+      document.getElementById("week").textContent = `📆 Weekly Focus: ${weekMsg}`;
+    }
+  </script>
+</body>
+</html>
